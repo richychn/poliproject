@@ -1,3 +1,8 @@
+=begin
+https://rossta.net/blog/a-ruby-antihero-thread-pool.html
+
+=end
+
 class ThreadPool
   def initialize(size:)
     @size = size
