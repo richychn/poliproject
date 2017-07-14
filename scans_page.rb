@@ -4,6 +4,14 @@ require 'date'
 require 'open-uri'
 require 'nokogiri'
 
+def scan_text(text)
+  array = text_to_array(text)
+  total = array.length
+  rm_stop_words!(array)
+  nouns = no_of_part(array, "N")
+  return nouns / total.to_f
+end
+
 def scan_file(filename)
   text = file_to_text(filename)
   return scan_text(text)
@@ -12,17 +20,6 @@ end
 def scan_webpage(url)
   text = webpage_to_text(url)
   return scan_text(text)
-end
-
-def scan_text(text)
-  array = text_to_array(text)
-  p array
-  p array.length
-  array1 = rm_stop_words!(array)
-  p array1
-  p array1.length
-  nouns = no_of_part(array1, "N")
-  return nouns / array.length.to_f
 end
 
 def rm_stop_words!(array)

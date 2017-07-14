@@ -2,15 +2,20 @@ require 'nokogiri'
 require 'open-uri'
 require 'pry-byebug'
 require 'date'
+require_relative 'thread_pool.rb'
 
 def no_of_part(array, part)
   #threads = []
   i= 0
+  pool = ThreadPool.new(size: 50)
   array.each do |word|
+    pool.schedule do
     # threads << Thread.new do
-    i += 1 if check(word, part)
+      i += 1 if check(word, part)
     # end
+    end
   end
+  pool.shutdown
   # threads.each(&:join)
   return i
 end
