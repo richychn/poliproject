@@ -17,10 +17,9 @@ end
 def scan_text(text)
   array = text_to_array(text)
   total = array.length
-  p total
   array = rm_stop_words!(array)
   nouns = no_of_part(array, "N")
-  return nouns / total.to_f
+  return nouns / array.length.to_f
 end
 
 def rm_stop_words!(array)

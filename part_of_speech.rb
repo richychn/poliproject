@@ -32,3 +32,19 @@ end
 #   return Time.now - start
 # end
 # p timer
+
+def no_of_part_hash(array, part)
+  nhash = {}
+  ahash = {}
+  array.each do |word|
+    if nhash.key? word
+      nhash[word] += 1
+    elsif ahash.key? word
+      ahash[word] += 1
+    else
+      nhash[word] = 1 if check(word, part)
+      ahash[word] = 1 unless check(word, part)
+    end
+  end
+  return nhash.values.inject(&:+)
+end
