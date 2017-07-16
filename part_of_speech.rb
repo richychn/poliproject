@@ -36,15 +36,19 @@ end
 def no_of_part_hash(array, part)
   nhash = {}
   ahash = {}
+  pool = ThreadPool.new(size: 50)
   array.each do |word|
-    if nhash.key? word
-      nhash[word] += 1
-    elsif ahash.key? word
-      ahash[word] += 1
-    else
-      nhash[word] = 1 if check(word, part)
-      ahash[word] = 1 unless check(word, part)
+    pool.schedule do
+      if nhash.key? word
+        nhash[word] += 1
+      elsif ahash.key? word
+        ahash[word] += 1
+      else
+        nhash[word] = 1 if check(word, part)
+        ahash[word] = 1 unless check(word, part)
+      end
     end
   end
+  pool.shutdown
   return nhash.values.inject(&:+)
 end
