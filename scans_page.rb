@@ -18,7 +18,8 @@ def scan_text(text)
   array = text_to_array(text)
   total = array.length
   array = rm_stop_words!(array)
-  nouns = no_of_part(array, "N")
+  nouns = no_of_part_hash2(array, "N")
+  p nouns / total.to_f
   return nouns / array.length.to_f
 end
 
@@ -43,10 +44,9 @@ def webpage_to_text(url)
   html_file = open(url)
   html_doc = Nokogiri::HTML(html_file)
   text = ""
-  # html_doc.text.each do |element|
-  #   text += element
-  # end
-  text += html_doc.text
+  html_doc.search('p').each do |element|
+    text += element.text
+  end
   return text
 end
 

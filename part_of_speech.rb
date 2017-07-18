@@ -38,12 +38,12 @@ def no_of_part_hash(array, part)
   ahash = {}
   pool = ThreadPool.new(size: 50)
   array.each do |word|
-    pool.schedule do
-      if nhash.key? word
-        nhash[word] += 1
-      elsif ahash.key? word
-        ahash[word] += 1
-      else
+    if nhash.key? word
+      nhash[word] += 1
+    elsif ahash.key? word
+      ahash[word] += 1
+    else
+      pool.schedule do
         nhash[word] = 1 if check(word, part)
         ahash[word] = 1 unless check(word, part)
       end
@@ -51,4 +51,46 @@ def no_of_part_hash(array, part)
   end
   pool.shutdown
   return nhash.values.inject(&:+)
+end
+
+def no_of_part_hash1(array, part)
+  nhash = Hash.new(0)
+  #pool = ThreadPool.new(size: 50)
+  array.each do |word|
+    #pool.schedule do
+      if nhash[word] == 0
+        nhash[word] += 1 if check(word, part)
+      elsif nhash[word] > 0
+        nhash[word] += 1
+      else
+        nhash[word] = 0
+      end
+    # end
+  end
+  #pool.shutdown
+  return nhash.values.inject(&:+)
+end
+
+def no_of_part_hash2(array, part)
+  pool = ThreadPool.new(size: 50)
+  nhash = frequency(array)
+  pool.schedule do
+    nhash.each do |key, value|
+      nhash[key] = 0 unless check(key, part)
+    end
+  end
+  pool.shutdown
+  return nhash.values.inject(&:+)
+end
+
+def frequency(array)
+  pool = ThreadPool.new(size: 50)
+  word_count = Hash.new(0)
+  pool.schedule do
+    array.each do |word|
+      word_count[word] += 1
+    end
+  end
+  pool.shutdown
+  return word_count
 end
